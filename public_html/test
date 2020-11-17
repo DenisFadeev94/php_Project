@@ -1,0 +1,35 @@
+      $url = explode('/', substr($adress_str, strlen(PATH . $this->routes['admin']['alias']) + 1));
+
+                if ($url[0] && is_dir($_SERVER['DOCUMENT_ROOT'] . PATH . $this->routes['plugins']['path'] . $url[0])) {
+
+                    $plugin = array_shift($url);
+
+                    $pluginSetting = $this->routes['settings']['path'] . ucfirst($plugin . 'Settings');
+
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . PATH . $pluginSetting . '.php')) {
+
+                        $pluginSetting = str_replace('/', '\\', $pluginSetting);
+
+                        $this->routes = $pluginSetting::get('routes');
+
+                    }
+
+                    $dir = $this->routes['plugins']['dir'] ? '/' . $this->routes['plugins']['dir'] . '/' : '/';
+
+                    $dir = str_replace('//', '/', $dir);
+
+                    $this->controller = $this->routes['plugin']['path'] . $plugin . $dir;
+
+                    $hrUrl = $this->routes['plugins']['hrUrl'];
+
+                    $route = 'plugins';
+
+                } else {
+
+                    $this->controller = $this->routes['admin']['path'];
+
+                    $hrUrl = $this->routes['admin']['hrUrl'];
+
+                    $route = 'admin';
+
+                }
